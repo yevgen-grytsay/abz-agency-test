@@ -2,7 +2,12 @@
 
 namespace App\Exceptions;
 
+use App\Models\User;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Foundation\Exceptions\Handler as ExceptionHandler;
+use Illuminate\Http\Request;
+use Illuminate\Validation\ValidationException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 use Throwable;
 
 class Handler extends ExceptionHandler
@@ -25,6 +30,43 @@ class Handler extends ExceptionHandler
     {
         $this->reportable(function (Throwable $e) {
             //
+        });
+
+
+        $this->renderable(function (NotFoundHttpException $e, Request $request) {
+
+            if ($request->is('api/*') && $e->getPrevious() instanceof ModelNotFoundException) {
+                /** @var ModelNotFoundException $modelNotFoundException */
+                $modelNotFoundException = $e->getPrevious();
+
+                $message = match(true) {
+                    $modelNotFoundException->getModel() === User::class => 'The user with the requested identifier does not exist',
+                    default => sprintf('%s not found.', $modelNotFoundException->getModel()),
+                };
+
+                return response()->json([
+                    'success' => false,
+                    'message' => $message,
+                    'fails' => [
+                        'id' => [
+                            'User not found',
+                        ],
+                    ],
+                ], 404);
+            }
+
+        });
+
+        $this->renderable(function (ValidationException $e, Request $request) {
+
+            if ($request->is('api/*')) {
+                return response()->json([
+                    'success' => false,
+                    'message' => 'Validation failed',
+                    'fails' => $e->errors(),
+                ], 400);
+            }
+
         });
     }
 }

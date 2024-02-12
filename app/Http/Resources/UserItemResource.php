@@ -6,15 +6,8 @@ use App\Models\User;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 
-class UserResource extends JsonResource
+class UserItemResource extends JsonResource
 {
-    /**
-     * The "data" wrapper that should be applied.
-     *
-     * @var string|null
-     */
-    public static $wrap = 'user';
-
     /**
      * Transform the resource into an array.
      *
@@ -32,6 +25,7 @@ class UserResource extends JsonResource
             'phone' => $user->phone,
             'position' => $user->position->name,
             'position_id' => $user->position_id,
+            'registration_timestamp' => $user->created_at,
             'photo' => $user->photo,
         ];
     }

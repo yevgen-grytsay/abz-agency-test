@@ -1,5 +1,7 @@
 <?php
 
+use App\Http\Controllers\PositionController;
+use App\Http\Controllers\UserController;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 
@@ -20,6 +22,8 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 
 // TODO add authentication and pagination
-Route::get('/positions', [\App\Http\Controllers\PositionController::class, 'index']);
+Route::get('/positions', [PositionController::class, 'index']);
 
-Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);
+Route::get('/users', [UserController::class, 'index']);
+
+Route::get('/users/{id}', [UserController::class, 'show']);
