@@ -5,9 +5,12 @@ namespace App\Http\Controllers;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Models\User;
+use Illuminate\Http\JsonResponse;
+use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
+use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -52,6 +55,31 @@ class UserController extends Controller
 
         return UserResource::make(User::findOrFail($validator['id']))->additional([
             'success' => true,
+        ]);
+    }
+
+    public function create(Request $request)
+    {
+        $validator = Validator::make($request->all(), [
+            'name' => ['required', 'string', 'min:2', 'max:60'],
+            'email' => ['required', 'email', 'unique:users,email'],
+            'phone' => ['required', 'regex:/^\+380[0-9]{9}$/', 'unique:users,phone'],
+            'position_id' => [
+                'required',
+                Rule::exists('positions', 'id'),
+            ],
+            'photo' => ['required'], // todo implement
+        ]);
+
+        $validatedData = $validator->validate();
+
+        $user = new User($validatedData);
+        $user->save();
+
+        return new JsonResponse([
+            'success' => true,
+            'user_id' => $user->id,
+            'message' => 'New user successfully registered',
         ]);
     }
 }

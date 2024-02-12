@@ -10,7 +10,7 @@ use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-    use RefreshDatabase;
+//    use RefreshDatabase;
 
     public function test_user_not_found(): void
     {
@@ -100,6 +100,68 @@ class ExampleTest extends TestCase
             ->etc();
         });
 
+    }
+
+    public function test_create_user(): void
+    {
+        $position = new Position();
+        $position->name = 'Testers ' . fake()->unique()->name;
+        $position->save();
+
+        $response = $this->postJson('/api/users', [
+            'name' => fake()->firstName(),
+            'email' => fake()->unique()->email(),
+            'position_id' => $position->id,
+            'phone' => '+380' . fake()->unique()->randomNumber(9),
+            'photo' => fake()->imageUrl(),
+        ]);
+
+        $response->dump();
+
+        $response->assertStatus(200);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->whereAllType([
+                'success' => 'boolean',
+                'user_id' => 'integer',
+                'message' => 'string',
+            ]);
+            $json
+                ->where('success', true)
+                ->where('message', 'New user successfully registered')
+                ->etc();
+        });
+    }
+
+    public function test_can_not_create_user(): void
+    {
+        $response = $this->postJson('/api/users', [
+            'name' => 'a',
+            'email' => 'a',
+            'position_id' => 0,
+            'phone' => '+380',
+            'photo' => 'a',
+        ]);
+
+        $response->dump();
+
+        $response->assertStatus(422);
+        $response->assertJson(function (AssertableJson $json) {
+            $json->whereAllType([
+                'success' => 'boolean',
+                'message' => 'string',
+                'fails' => 'array',
+            ]);
+            $json
+                ->where('success', false)
+                ->where('message', 'Validation failed')
+                ->where('fails', [
+                    'name' => ['The name field must be at least 2 characters.'],
+                    'email' => ['The email field must be a valid email address.'],
+                    'phone' => ['The phone field format is invalid.'],
+                    'position_id' => ['The selected position id is invalid.'],
+                ])
+            ;
+        });
 
     }
 }

@@ -64,7 +64,7 @@ class Handler extends ExceptionHandler
                     'success' => false,
                     'message' => 'Validation failed',
                     'fails' => $e->errors(),
-                ], 400);
+                ], 422);
             }
 
         });
