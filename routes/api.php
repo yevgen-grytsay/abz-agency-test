@@ -21,3 +21,5 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 
 // TODO add authentication and pagination
 Route::get('/positions', [\App\Http\Controllers\PositionController::class, 'index']);
+
+Route::get('/users', [\App\Http\Controllers\UserController::class, 'index']);
