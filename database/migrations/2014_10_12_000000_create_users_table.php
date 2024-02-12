@@ -17,7 +17,7 @@ return new class extends Migration
             $table->string('name');
             $table->string('email')->unique();
             $table->foreignIdFor(Position::class);
-            $table->string('phone');
+            $table->string('phone')->unique();
             $table->string('photo');
             $table->timestamps();
         });
