@@ -22,12 +22,29 @@ class UserController extends Controller
     {
         $validator = Validator::make($request->all(), [
             'count' => ['nullable', 'integer', 'min:1', 'max:100'],
+            'offset' => ['nullable', 'integer', 'min:0'],
+            'page' => ['nullable', 'integer', 'min:1'],
         ])->validate();
 
         $count = $validator['count'] ?? self::USERS_PER_PAGE;
+        $offset = $validator['offset'] ?? null;
+
+        if ($offset !== null) {
+            $userList = User::with('position')
+                ->orderByDesc('id')
+                ->offset($offset)
+                ->limit($count)
+                ->get();
+
+            return UserCollection::make($userList)->additional([
+                'success' => true,
+            ]);
+        }
 
         /** @var LengthAwarePaginator $paginator */
-        $paginator = User::paginate($count);
+        $paginator = User::with('position')
+            ->orderByDesc('id')
+            ->paginate($count);
 
         if ($paginator->isEmpty()) {
             return response()->json(

@@ -102,6 +102,43 @@ class ExampleTest extends TestCase
 
     }
 
+    public function test_get_user_list_with_offset(): void
+    {
+        $position = new Position();
+        $position->name = 'Testers';
+        $position->save();
+
+
+        $usersCount = User::count();
+        if ($usersCount < 10) {
+            User::factory()
+                ->count(10 - $usersCount)
+                ->create([
+                    'position_id' => $position->id,
+                ]);
+        }
+
+        $response = $this->getJson('/api/v1/users?offset=1&count=9');
+        $response->dump();
+
+        $response->assertStatus(200);
+
+        $users = User::orderByDesc('id')
+            ->take(10)
+            ->get();
+
+        $response->assertJson(function (AssertableJson $json) use ($users) {
+            $json->has('users', 9);
+            $json->whereAllType([
+                'success' => 'boolean',
+                'users' => 'array',
+                'users.0.id' => 'integer',
+            ]);
+            $json->where('users.0.id', $users[1]->id);
+            $json->where('users.8.id', $users[9]->id);
+        });
+    }
+
     public function test_create_user(): void
     {
         $position = new Position();
@@ -112,7 +149,7 @@ class ExampleTest extends TestCase
             'name' => fake()->firstName(),
             'email' => fake()->unique()->email(),
             'position_id' => $position->id,
-            'phone' => '+380' . fake()->unique()->randomNumber(9), // todo posiible conflicts
+            'phone' => '+380' . substr(time(), 1, 9), // todo posible conflicts
             'photo' => fake()->imageUrl(),
         ]);
 
