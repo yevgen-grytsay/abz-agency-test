@@ -15,6 +15,7 @@ class ExampleTest extends TestCase
     public function test_user_not_found(): void
     {
         $response = $this->getJson('/api/users/1');
+        $response->dump();
 
         $response->assertStatus(404);
 
@@ -27,7 +28,6 @@ class ExampleTest extends TestCase
                 ])
             );
 
-        $response->dump();
     }
 
     public function test_get_positions(): void
