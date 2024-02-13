@@ -17,10 +17,16 @@ class UserController extends Controller
 {
     const int USERS_PER_PAGE = 5;
 
-    public function index()
+    public function index(Request $request)
     {
+        $validator = Validator::make($request->all(), [
+            'count' => ['nullable', 'integer', 'min:1', 'max:100'],
+        ])->validate();
+
+        $count = $validator['count'] ?? self::USERS_PER_PAGE;
+
         /** @var LengthAwarePaginator $paginator */
-        $paginator = User::paginate(self::USERS_PER_PAGE);
+        $paginator = User::paginate($count);
 
         if ($paginator->isEmpty()) {
             return response()->json(

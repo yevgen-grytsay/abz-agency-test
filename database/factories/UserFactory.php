@@ -24,7 +24,7 @@ class UserFactory extends Factory
             'position_id' => function($attributes) {
                 return fake()->randomElement(Position::all())->id;
             },
-            'photo' => fake()->imageUrl(),
+            'photo' => fake()->imageUrl(70, 70),
         ];
     }
 }
