@@ -14,7 +14,7 @@ class ExampleTest extends TestCase
 
     public function test_user_not_found(): void
     {
-        $response = $this->getJson('/api/users/1');
+        $response = $this->getJson('/api/v1/users/1');
         $response->dump();
 
         $response->assertStatus(404);
@@ -36,7 +36,7 @@ class ExampleTest extends TestCase
         $position->name = 'Testers';
         $position->save();
 
-        $response = $this->getJson('/api/positions');
+        $response = $this->getJson('/api/v1/positions');
         $response->dump();
 
         $response->assertStatus(200);
@@ -61,7 +61,7 @@ class ExampleTest extends TestCase
             'position_id' => $position->id,
         ]);
 
-        $response = $this->getJson('/api/users/' . $user->id);
+        $response = $this->getJson('/api/v1/users/' . $user->id);
 
         $response->assertStatus(200);
 
@@ -86,7 +86,7 @@ class ExampleTest extends TestCase
             'position_id' => $position->id,
         ]);
 
-        $response = $this->getJson('/api/users');
+        $response = $this->getJson('/api/v1/users');
         $response->dump();
 
         $response->assertStatus(200);
@@ -108,11 +108,11 @@ class ExampleTest extends TestCase
         $position->name = 'Testers ' . fake()->unique()->name;
         $position->save();
 
-        $response = $this->postJson('/api/users', [
+        $response = $this->postJson('/api/v1/users', [
             'name' => fake()->firstName(),
             'email' => fake()->unique()->email(),
             'position_id' => $position->id,
-            'phone' => '+380' . fake()->unique()->randomNumber(9),
+            'phone' => '+380' . fake()->unique()->randomNumber(9), // todo posiible conflicts
             'photo' => fake()->imageUrl(),
         ]);
 
@@ -134,7 +134,7 @@ class ExampleTest extends TestCase
 
     public function test_can_not_create_user(): void
     {
-        $response = $this->postJson('/api/users', [
+        $response = $this->postJson('/api/v1/users', [
             'name' => 'a',
             'email' => 'a',
             'position_id' => 0,

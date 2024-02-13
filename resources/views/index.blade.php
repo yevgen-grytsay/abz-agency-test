@@ -20,9 +20,6 @@
     </head>
     <body class="d-flex flex-column h-100">
 
-   
-
-
 <!-- Begin page content -->
 <main class="flex-shrink-0">
   <div class="container py-4">
@@ -79,7 +76,7 @@
         const rootComponent = {
             setup() {
                 const userList = ref([]);
-                const nextUrl = ref('/api/users');
+                const nextUrl = ref('/api/v1/users');
 
                 return {
                     userList,
@@ -97,12 +94,11 @@
             },
             methods: {
                 loadMore() {
-                    const url = this.response ? this.response.links.next_url : '/api/users?count=6';
-                    if (url === null) {
+                    if (this.nextUrl === null) {
                         return;
                     }
 
-                    axios.get(url, {params: {count: 6}}).then((response) => {
+                    axios.get(this.nextUrl, {params: {count: 6}}).then((response) => {
                         // console.log(response.data);
 
                         this.userList = [

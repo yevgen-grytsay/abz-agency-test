@@ -1,7 +1,8 @@
 <?php
 
-namespace App\Http\Controllers;
+namespace App\Http\Controllers\ApiV1;
 
+use App\Http\Controllers\Controller;
 use App\Http\Resources\PositionCollection;
 use App\Models\Position;
 use Illuminate\Http\Resources\Json\JsonResource;
