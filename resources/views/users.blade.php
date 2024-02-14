@@ -4,7 +4,7 @@
         <meta charset="utf-8">
         <meta name="viewport" content="width=device-width, initial-scale=1">
 
-        <title>Laravel</title>
+        <title>Users</title>
 
         <!-- Fonts -->
         <link rel="preconnect" href="https://fonts.bunny.net">
@@ -23,19 +23,19 @@
 <!-- Begin page content -->
 <main class="flex-shrink-0">
   <div class="container py-4">
-    
+
     <header>
       <!-- Fixed navbar -->
       <nav class="navbar navbar-expand-md navbar-dark bg-dark">
         <div class="container-fluid">
-        
+
           <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
           </button>
           <div class="collapse navbar-collapse" id="navbarCollapse">
             <ul class="navbar-nav me-auto mb-2 mb-md-0">
               <li class="nav-item">
-                <a class="nav-link active" aria-current="page" href="/index">Users</a>
+                <a class="nav-link active" aria-current="page" href="/">Users</a>
               </li>
               <li class="nav-item">
                 <a class="nav-link" href="/users/add">Add User</a>
@@ -106,7 +106,7 @@
                             ...response.data.users,
                         ];
 
-                        this.response = response.data;    
+                        this.response = response.data;
                         this.nextUrl = response.data.links.next_url;
                     });
                 }
@@ -128,7 +128,7 @@
 </footer>
 <script src="/docs/5.3/dist/js/bootstrap.bundle.min.js" integrity="sha384-C6RzsynM9kWDrMNeT87bh95OGNyZPhcTNXj1NW7RuBCsyN/o0jlpcV8Qyq46cDfL" crossorigin="anonymous"></script>
 
-    
+
 
 </body>
 

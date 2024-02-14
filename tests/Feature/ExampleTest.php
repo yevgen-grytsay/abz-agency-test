@@ -5,6 +5,8 @@ namespace Tests\Feature;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
+use Illuminate\Http\UploadedFile;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
@@ -145,12 +147,14 @@ class ExampleTest extends TestCase
         $position->name = 'Testers ' . fake()->unique()->name;
         $position->save();
 
-        $response = $this->postJson('/api/v1/users', [
+//        Storage::fake('photos');
+
+        $response = $this->post('/api/v1/users', [
             'name' => fake()->firstName(),
             'email' => fake()->unique()->email(),
             'position_id' => $position->id,
             'phone' => '+380' . substr(time(), 1, 9), // todo posible conflicts
-            'photo' => fake()->imageUrl(),
+            'photo_raw' => UploadedFile::fake()->image('photo1.jpg', 70, 70),
         ]);
 
         $response->dump();
@@ -167,16 +171,21 @@ class ExampleTest extends TestCase
                 ->where('message', 'New user successfully registered')
                 ->etc();
         });
+
+        $response = $this->getJson('/api/v1/users/'. $response['user_id']);
+        $response->dump();
     }
 
     public function test_can_not_create_user(): void
     {
+//        Storage::fake('photos');
+
         $response = $this->postJson('/api/v1/users', [
             'name' => 'a',
             'email' => 'a',
             'position_id' => 0,
             'phone' => '+380',
-            'photo' => 'a',
+            'photo_raw' => UploadedFile::fake()->image('photo1.jpg', 69, 70),
         ]);
 
         $response->dump();
@@ -196,6 +205,7 @@ class ExampleTest extends TestCase
                     'email' => ['The email field must be a valid email address.'],
                     'phone' => ['The phone field format is invalid.'],
                     'position_id' => ['The selected position id is invalid.'],
+                    'photo_raw' => ['The photo raw field has invalid image dimensions.'],
                 ])
             ;
         });

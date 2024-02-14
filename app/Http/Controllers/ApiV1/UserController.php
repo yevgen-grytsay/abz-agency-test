@@ -3,15 +3,16 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\CreateUserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
+use App\Models\Position;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
-use Illuminate\Validation\Rule;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
@@ -82,22 +83,19 @@ class UserController extends Controller
         ]);
     }
 
-    public function create(Request $request)
+    public function create(CreateUserRequest $request)
     {
-        $validator = Validator::make($request->all(), [
-            'name' => ['required', 'string', 'min:2', 'max:60'],
-            'email' => ['required', 'email', 'unique:users,email'],
-            'phone' => ['required', 'regex:/^\+380[0-9]{9}$/', 'unique:users,phone'],
-            'position_id' => [
-                'required',
-                Rule::exists('positions', 'id'),
-            ],
-            'photo' => ['required'], // todo implement
-        ]);
+        $validatedData = $request->validated();
 
-        $validatedData = $validator->validate();
-
-        $user = new User($validatedData);
+        $user = new User();
+        $user->name = $validatedData['name'];
+        $user->email = $validatedData['email'];
+        $user->position()->associate(
+            Position::query()
+                ->findOrFail($validatedData['position_id'])
+        );
+        $user->phone = $validatedData['phone'];
+        $user->photo = $request->photo_raw->store('photos');
         $user->save();
 
         return new JsonResponse([

@@ -16,3 +16,7 @@ use Illuminate\Support\Facades\Route;
 
 
 Route::get('/', [UsersController::class, 'index']);
+
+Route::get('/users/add', function() {
+    return view('add_user');
+});

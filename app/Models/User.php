@@ -17,6 +17,7 @@ use Laravel\Sanctum\HasApiTokens;
  * @property Position $position
  * @property string $phone
  * @property string $photo
+ * @property $created_at
  */
 class User extends Authenticatable
 {

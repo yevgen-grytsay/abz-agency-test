@@ -33,6 +33,7 @@ class UserResource extends JsonResource
             'position' => $user->position->name,
             'position_id' => $user->position_id,
             'photo' => $user->photo,
+//            'photo' => Storage::url($user->photo), // todo implement
         ];
     }
 }
