@@ -120,7 +120,6 @@
 
                 return {
                     positions,
-                    form: useSubmitForm,
                 }
             },
             methods: {
