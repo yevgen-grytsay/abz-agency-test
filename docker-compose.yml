@@ -16,7 +16,9 @@ services:
             LARAVEL_SAIL: 1
             XDEBUG_MODE: '${SAIL_XDEBUG_MODE:-off}'
             XDEBUG_CONFIG: '${SAIL_XDEBUG_CONFIG:-client_host=host.docker.internal}'
+#            XDEBUG_SESSION: 1 # use with care as it can block php scripts (e.g. workers) when "Start Listening..." is on in PhpStorm
             IGNITION_LOCAL_SITES_PATH: '${PWD}'
+            PHP_IDE_CONFIG: 'serverName=laravel.test'
         volumes:
             - '.:/var/www/html'
         networks:
