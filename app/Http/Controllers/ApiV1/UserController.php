@@ -6,6 +6,8 @@ use App\Http\Controllers\Controller;
 use App\Http\Requests\CreateUserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
+use App\Jobs\TestJob;
+use App\Jobs\TestJob2;
 use App\Models\Position;
 use App\Models\User;
 use Illuminate\Http\JsonResponse;
@@ -95,8 +97,12 @@ class UserController extends Controller
                 ->findOrFail($validatedData['position_id'])
         );
         $user->phone = $validatedData['phone'];
-        $user->photo = $request->photo_raw->store('photos');
+        $photoPath = $request->photo_raw->store('photos');
+//        $user->photo = $photoPath;
+        $user->photo = 'empty';
         $user->save();
+
+        TestJob::dispatch($user, $photoPath);
 
         return new JsonResponse([
             'success' => true,
