@@ -4,18 +4,25 @@ namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
 use App\Http\Resources\PositionCollection;
-use App\Models\Position;
+use App\Repositories\PositionRepository;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Symfony\Component\HttpFoundation\Response;
 
 class PositionController extends Controller
 {
+    private PositionRepository $positionRepository;
+
+    public function __construct(PositionRepository $positionRepository)
+    {
+        $this->positionRepository = $positionRepository;
+    }
+
     /**
      * Display a listing of the resource.
      */
     public function index()
     {
-        $positionCollection = Position::all();
+        $positionCollection = $this->positionRepository->getAll();
         if ($positionCollection->isEmpty()) {
             return response()->json(
                 new JsonResource([
