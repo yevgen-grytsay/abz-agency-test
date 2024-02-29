@@ -7,19 +7,25 @@ use App\Http\Requests\CreateUserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
 use App\Jobs\TestJob;
-use App\Jobs\TestJob2;
 use App\Models\Position;
 use App\Models\User;
+use App\Repositories\UserRepository;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
-use Illuminate\Pagination\LengthAwarePaginator;
 use Illuminate\Support\Facades\Validator;
 use Symfony\Component\HttpFoundation\Response;
 
 class UserController extends Controller
 {
     const int USERS_PER_PAGE = 5;
+
+    private UserRepository $userRepository;
+
+    public function __construct(UserRepository $userRepository)
+    {
+        $this->userRepository = $userRepository;
+    }
 
     public function index(Request $request)
     {
@@ -33,22 +39,14 @@ class UserController extends Controller
         $offset = $validator['offset'] ?? null;
 
         if ($offset !== null) {
-            $userList = User::with('position')
-                ->orderByDesc('id')
-                ->offset($offset)
-                ->limit($count)
-                ->get();
+            $userList = $this->userRepository->getUsersForApiWithOffset($offset, $count);
 
             return UserCollection::make($userList)->additional([
                 'success' => true,
             ]);
         }
 
-        /** @var LengthAwarePaginator $paginator */
-        $paginator = User::with('position')
-            ->orderByDesc('id')
-            ->paginate($count);
-
+        $paginator = $this->userRepository->getUsersForApi($count);
         if ($paginator->isEmpty()) {
             return response()->json(
                 new JsonResource([
@@ -80,7 +78,8 @@ class UserController extends Controller
 //            'body' => 'required',
 //        ]);
 
-        return UserResource::make(User::findOrFail($validator['id']))->additional([
+        $user = $this->userRepository->getById($validator['id']);
+        return UserResource::make($user)->additional([
             'success' => true,
         ]);
     }
