@@ -10,3 +10,10 @@ php artisan key:generate
 ./vendor/bin/sail php artisan db:seed
 ./vendor/bin/sail php artisan test --testsuite=Feature --stop-on-failure
 ```
+
+
+
+```shell
+export WWWUSER=${WWWUSER:-$UID}
+export WWWGROUP=${WWWGROUP:-$(id -g)}
+```
