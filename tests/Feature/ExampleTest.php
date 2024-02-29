@@ -6,13 +6,12 @@ use App\Models\Position;
 use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Http\UploadedFile;
-use Illuminate\Support\Facades\Storage;
 use Illuminate\Testing\Fluent\AssertableJson;
 use Tests\TestCase;
 
 class ExampleTest extends TestCase
 {
-//    use RefreshDatabase;
+    use RefreshDatabase;
 
     public function test_user_not_found(): void
     {
