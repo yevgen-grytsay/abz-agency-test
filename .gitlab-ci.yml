@@ -21,10 +21,10 @@ default:
   services:
     - mysql:8.0
   before_script:
-    # Install dependencies
     - bash ci/docker_install.sh > /dev/null
 
 variables:
+  DB_HOST: 'mysql'
 #  MYSQL_ROOT_HOST: '%'
   MYSQL_USER: 'sail'
   MYSQL_PASSWORD: 'password'

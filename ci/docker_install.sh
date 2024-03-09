@@ -7,7 +7,7 @@ set -xe
 
 # Install git (the php image doesn't have it) which is required by composer
 apt-get update -yqq
-apt-get install git wget zip -yqq
+apt-get install git wget zip mysql-client -yqq
 
 docker-php-ext-install pdo_mysql
 
@@ -20,3 +20,8 @@ php composer.phar install
 
 cp .env.example .env
 php artisan key:generate
+
+mysql --user=root --host="$DB_HOST" --password="$MYSQL_ROOT_PASSWORD" <<-EOSQL
+    CREATE DATABASE IF NOT EXISTS testing;
+    GRANT ALL PRIVILEGES ON \`testing%\`.* TO '$MYSQL_USER'@'%';
+EOSQL
