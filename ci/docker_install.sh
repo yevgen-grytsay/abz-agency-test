@@ -7,11 +7,17 @@ set -xe
 
 # Install git (the php image doesn't have it) which is required by composer
 apt-get update -yqq
-apt-get install git wget zip default-mysql-client \
-    php-gd curl libmcrypt-dev libjpeg-dev libpng-dev libfreetype6-dev libbz2-dev \
-    -yqq
+apt-get install git wget zip default-mysql-client -yqq
 
-docker-php-ext-install pdo_mysql gd
+apt-get install -y \
+    libfreetype-dev \
+    libjpeg62-turbo-dev \
+    libpng-dev \
+    && docker-php-ext-configure gd --with-freetype --with-jpeg \
+	&& docker-php-ext-install gd
+
+
+docker-php-ext-install pdo_mysql
 
 wget https://composer.github.io/installer.sig -O - -q | tr -d '\n' > installer.sig
 php -r "copy('https://getcomposer.org/installer', 'composer-setup.php');"
