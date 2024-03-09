@@ -16,6 +16,20 @@
 # This specific template is located at:
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
+default:
+  image: php:8:3
+  services:
+    - mysql:8.0
+  before_script:
+    # Install dependencies
+    - bash ci/docker_install.sh > /dev/null
+
+variables:
+  MYSQL_DATABASE: abz_agency_test
+  MYSQL_ROOT_PASSWORD: password
+  DB_HOST: mysql
+  DB_USERNAME: sail
+
 stages:          # List of stages for jobs, and their order of execution
   - build
   - test
@@ -40,6 +54,11 @@ lint-test-job:   # This job also runs in the test stage.
     - echo "Linting code... This will take about 10 seconds."
     - sleep 10
     - echo "No lint issues found."
+
+feature-test-job:
+  stage: test
+  script:
+    - php artisan test --testsuite=Feature --stop-on-failure
 
 deploy-job:      # This job runs in the deploy stage.
   stage: deploy  # It only runs when *both* jobs in the test stage complete successfully.
