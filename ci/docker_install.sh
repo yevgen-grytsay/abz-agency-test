@@ -7,7 +7,7 @@ set -xe
 
 # Install git (the php image doesn't have it) which is required by composer
 apt-get update -yqq
-apt-get install git wget -yqq
+apt-get install git wget zip -yqq
 
 docker-php-ext-install pdo_mysql
 
