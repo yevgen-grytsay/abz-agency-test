@@ -17,7 +17,7 @@
 # https://gitlab.com/gitlab-org/gitlab/-/blob/master/lib/gitlab/ci/templates/Getting-Started.gitlab-ci.yml
 
 default:
-  image: php:8:3
+  image: php:8.3
   services:
     - mysql:8.0
   before_script:
