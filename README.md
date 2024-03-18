@@ -17,3 +17,9 @@ php artisan key:generate
 export WWWUSER=${WWWUSER:-$UID}
 export WWWGROUP=${WWWGROUP:-$(id -g)}
 ```
+
+
+## Resources
+- GitLab: [Rules](https://docs.gitlab.com/ee/ci/yaml/index.html#rules)
+- GitLab: [Common `if` clauses for `rules`](https://docs.gitlab.com/ee/ci/jobs/job_control.html#common-if-clauses-for-rules)
+- GitLab: [Cache PHP dependencies](https://docs.gitlab.com/ee/ci/caching/#cache-php-dependencies)
