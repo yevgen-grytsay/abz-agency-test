@@ -20,6 +20,10 @@ default:
   image: php:8.3
   services:
     - mysql:8.0
+  cache: # Cache libraries in between jobs
+    key: $CI_COMMIT_REF_SLUG
+    paths:
+      - vendor/
   before_script:
     - bash ci/docker_install.sh > /dev/null
 
