@@ -37,7 +37,7 @@ variables:
     - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 
 stages:          # List of stages for jobs, and their order of execution
-#  - build
+  - build
   - test
   - deploy
 
@@ -60,6 +60,13 @@ stages:          # List of stages for jobs, and their order of execution
 #    - echo "Linting code... This will take about 10 seconds."
 #    - sleep 10
 #    - echo "No lint issues found."
+
+code-check-build-job:
+  extends:
+    - .standard-rules
+  stage: build
+  script:
+    - ./local-php-security-checker
 
 feature-test-job:
   extends:

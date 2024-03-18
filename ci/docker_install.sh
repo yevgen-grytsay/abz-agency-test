@@ -29,6 +29,11 @@ php composer.phar install
 cp .env.example .env
 php artisan key:generate
 
+PHP_SEC_CHECKER_NAME=local-php-security-checker_2.0.6_linux_amd64
+wget "https://github.com/fabpot/local-php-security-checker/releases/download/v2.0.6/$PHP_SEC_CHECKER_NAME"
+mv $PHP_SEC_CHECKER_NAME local-php-security-checker
+chmod u+x ./local-php-security-checker
+
 mysql --user=root --host="$DB_HOST" --password="$MYSQL_ROOT_PASSWORD" <<-EOSQL
     CREATE DATABASE IF NOT EXISTS testing;
     GRANT ALL PRIVILEGES ON \`testing%\`.* TO '$MYSQL_USER'@'%';
