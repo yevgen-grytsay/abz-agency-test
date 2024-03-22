@@ -72,6 +72,14 @@ code-check-build-job:
   script:
     - ./local-php-security-checker
 
+composer-outdated-patch-only-build-job:
+  extends:
+    - .standard-rules
+  stage: build
+  allow_failure: true
+  script:
+    - php composer.phar outdated -pDA --strict
+
 feature-test-job:
   extends:
     - .standard-rules
