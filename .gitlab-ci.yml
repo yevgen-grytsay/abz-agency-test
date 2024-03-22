@@ -77,8 +77,12 @@ composer-outdated-patch-only-build-job:
     - .standard-rules
   stage: build
   allow_failure: true
+  artifacts:
+    paths:
+      - composer-outdated.txt
+    expire_in: 1 day
   script:
-    - php composer.phar outdated -pDA --strict
+    - php composer.phar outdated -pDA > composer-outdated.txt
 
 feature-test-job:
   extends:
