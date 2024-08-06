@@ -3,14 +3,9 @@
 namespace App\Http\Controllers\ApiV1;
 
 use App\Http\Controllers\Controller;
-use App\Http\Requests\CreateUserRequest;
 use App\Http\Resources\UserCollection;
 use App\Http\Resources\UserResource;
-use App\Jobs\TestJob;
-use App\Models\Position;
-use App\Models\User;
 use App\Repositories\UserRepository;
-use Illuminate\Http\JsonResponse;
 use Illuminate\Http\Request;
 use Illuminate\Http\Resources\Json\JsonResource;
 use Illuminate\Support\Facades\Validator;
@@ -81,32 +76,6 @@ class UserController extends Controller
         $user = $this->userRepository->getById($validator['id']);
         return UserResource::make($user)->additional([
             'success' => true,
-        ]);
-    }
-
-    public function create(CreateUserRequest $request)
-    {
-        $validatedData = $request->validated();
-
-        $user = new User();
-        $user->name = $validatedData['name'];
-        $user->email = $validatedData['email'];
-        $user->position()->associate(
-            Position::query()
-                ->findOrFail($validatedData['position_id'])
-        );
-        $user->phone = $validatedData['phone'];
-        $photoPath = $request->photo_raw->store('photos');
-//        $user->photo = $photoPath;
-        $user->photo = 'empty';
-        $user->save();
-
-        TestJob::dispatch($user, $photoPath);
-
-        return new JsonResponse([
-            'success' => true,
-            'user_id' => $user->id,
-            'message' => 'New user successfully registered',
         ]);
     }
 }
