@@ -61,7 +61,7 @@
                 </tr>
                 <tr v-for="user in userList" :key="user.id">
                     <td>@{{ user.id }}</td>
-                    <td>@{{ user.name }}</td>
+                    <td><a :href="user.profile_url">@{{ user.name }}</a></td>
                     <td>@{{ user.email }}</td>
                     <td>@{{ user.position }}</td>
                     <td><img :src="user.photo" alt=""></td>

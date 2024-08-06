@@ -1,6 +1,6 @@
 <?php
 
-use App\Http\Controllers\UsersController;
+use App\Http\Controllers\Web\UsersController;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -20,3 +20,6 @@ Route::get('/', [UsersController::class, 'index']);
 Route::get('/users/add', function() {
     return view('add_user');
 });
+
+Route::get('/users/{id}', [UsersController::class, 'show'])
+    ->name('users.profile');
