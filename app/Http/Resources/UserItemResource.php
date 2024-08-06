@@ -27,6 +27,7 @@ class UserItemResource extends JsonResource
             'position_id' => $user->position_id,
             'registration_timestamp' => $user->created_at,
             'photo' => $user->photo,
+            'profile_url' => route('users.profile', $user->id),
 //            'photo' => Storage::url($user->photo), // todo implement
         ];
     }
